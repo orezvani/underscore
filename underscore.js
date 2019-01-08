@@ -486,8 +486,14 @@
 
   // Split a collection into two arrays: one whose elements all satisfy the given
   // predicate, and one whose elements all do not satisfy the predicate.
-  _.partition = group(function(result, value, pass) {
+  _.split = group(function(result, value, pass) {
     result[pass ? 0 : 1].push(value);
+  }, true);
+
+  // Partition a collection into multiple arrays: each elements is pushed into an
+  // array whose index is equal to what is returned by the classifying function.
+  _.partition = group(function(result, value, pass) {
+    if (has(result, pass)) result[pass+0].push(value); else result[pass+0] = [value];
   }, true);
 
   // Array Functions

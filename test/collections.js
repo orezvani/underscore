@@ -889,35 +889,42 @@
     assert.strictEqual(_.size(0), 0, 'handles numbers');
   });
 
-  QUnit.test('partition', function(assert) {
+  QUnit.test('split', function(assert) {
     var list = [0, 1, 2, 3, 4, 5];
-    assert.deepEqual(_.partition(list, function(x) { return x < 4; }), [[0, 1, 2, 3], [4, 5]], 'handles bool return values');
-    assert.deepEqual(_.partition(list, function(x) { return x & 1; }), [[1, 3, 5], [0, 2, 4]], 'handles 0 and 1 return values');
-    assert.deepEqual(_.partition(list, function(x) { return x - 3; }), [[0, 1, 2, 4, 5], [3]], 'handles other numeric return values');
-    assert.deepEqual(_.partition(list, function(x) { return x > 1 ? null : true; }), [[0, 1], [2, 3, 4, 5]], 'handles null return values');
-    assert.deepEqual(_.partition(list, function(x) { if (x < 2) return true; }), [[0, 1], [2, 3, 4, 5]], 'handles undefined return values');
-    assert.deepEqual(_.partition({a: 1, b: 2, c: 3}, function(x) { return x > 1; }), [[2, 3], [1]], 'handles objects');
+    assert.deepEqual(_.split(list, function(x) { return x < 4; }), [[0, 1, 2, 3], [4, 5]], 'handles bool return values');
+    assert.deepEqual(_.split(list, function(x) { return x & 1; }), [[1, 3, 5], [0, 2, 4]], 'handles 0 and 1 return values');
+    assert.deepEqual(_.split(list, function(x) { return x - 3; }), [[0, 1, 2, 4, 5], [3]], 'handles other numeric return values');
+    assert.deepEqual(_.split(list, function(x) { return x > 1 ? null : true; }), [[0, 1], [2, 3, 4, 5]], 'handles null return values');
+    assert.deepEqual(_.split(list, function(x) { if (x < 2) return true; }), [[0, 1], [2, 3, 4, 5]], 'handles undefined return values');
+    assert.deepEqual(_.split({a: 1, b: 2, c: 3}, function(x) { return x > 1; }), [[2, 3], [1]], 'handles objects');
 
-    assert.deepEqual(_.partition(list, function(x, index) { return index % 2; }), [[1, 3, 5], [0, 2, 4]], 'can reference the array index');
-    assert.deepEqual(_.partition(list, function(x, index, arr) { return x === arr.length - 1; }), [[5], [0, 1, 2, 3, 4]], 'can reference the collection');
+    assert.deepEqual(_.split(list, function(x, index) { return index % 2; }), [[1, 3, 5], [0, 2, 4]], 'can reference the array index');
+    assert.deepEqual(_.split(list, function(x, index, arr) { return x === arr.length - 1; }), [[5], [0, 1, 2, 3, 4]], 'can reference the collection');
 
     // Default iterator
-    assert.deepEqual(_.partition([1, false, true, '']), [[1, true], [false, '']], 'Default iterator');
-    assert.deepEqual(_.partition([{x: 1}, {x: 0}, {x: 1}], 'x'), [[{x: 1}, {x: 1}], [{x: 0}]], 'Takes a string');
+    assert.deepEqual(_.split([1, false, true, '']), [[1, true], [false, '']], 'Default iterator');
+    assert.deepEqual(_.split([{x: 1}, {x: 0}, {x: 1}], 'x'), [[{x: 1}, {x: 1}], [{x: 0}]], 'Takes a string');
 
     // Context
     var predicate = function(x){ return x === this.x; };
-    assert.deepEqual(_.partition([1, 2, 3], predicate, {x: 2}), [[2], [1, 3]], 'partition takes a context argument');
+    assert.deepEqual(_.split([1, 2, 3], predicate, {x: 2}), [[2], [1, 3]], 'split takes a context argument');
 
-    assert.deepEqual(_.partition([{a: 1}, {b: 2}, {a: 1, b: 2}], {a: 1}), [[{a: 1}, {a: 1, b: 2}], [{b: 2}]], 'predicate can be object');
+    assert.deepEqual(_.split([{a: 1}, {b: 2}, {a: 1, b: 2}], {a: 1}), [[{a: 1}, {a: 1, b: 2}], [{b: 2}]], 'predicate can be object');
 
     var object = {a: 1};
-    _.partition(object, function(val, key, obj) {
+    _.split(object, function(val, key, obj) {
       assert.strictEqual(val, 1);
       assert.strictEqual(key, 'a');
       assert.strictEqual(obj, object);
       assert.strictEqual(this, predicate);
     }, predicate);
+  });
+
+  QUnit.test('partition', function(assert) {
+    var list = [0, 1, 2, 3, 4, 5, 6];
+    assert.deepEqual(_.partition(list, function(x) { return x < 4; }), [[0, 1, 2, 3], [4, 5, 6]], 'handles bool return values');
+    assert.deepEqual(_.partition(list, function(x) { return x & 1; }), [[1, 3, 5], [0, 2, 4, 6]], 'handles 0 and 1 return values');
+    assert.deepEqual(_.partition(list, function(x) { return x % 3; }), [[0, 3, 6], [1, 4], [2, 5]], 'handles more than two return values');
   });
 
   if (typeof document != 'undefined') {

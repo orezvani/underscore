@@ -724,6 +724,7 @@
     assert.deepEqual(_.map(collection, /b/g), [0, 1, 2]);
     assert.strictEqual(_.max(collection, /b/g), 'bbiz');
     assert.strictEqual(_.min(collection, /b/g), 'foo');
+    assert.deepEqual(_.split(collection, /b/g), [['bar', 'bbiz'], ['foo']]);
     assert.deepEqual(_.partition(collection, /b/g), [['bar', 'bbiz'], ['foo']]);
     assert.deepEqual(_.reject(collection, /b/g), ['foo']);
     assert.strictEqual(_.some(collection, /b/g), true);
